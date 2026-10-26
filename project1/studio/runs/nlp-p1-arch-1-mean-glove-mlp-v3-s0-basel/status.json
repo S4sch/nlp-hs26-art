@@ -1,0 +1,49 @@
+{
+ "state": "done",
+ "progress": 1.0,
+ "message": "",
+ "started": "2026-10-19T16:42:24",
+ "updated": "2026-10-19T16:43:56",
+ "minutes": 1.54,
+ "params": 230913,
+ "data": {
+  "vocabulary": 15800,
+  "unknown_types": 753,
+  "unknown_token_share": 0.00149,
+  "train_examples": 16801,
+  "validation_examples": 1000,
+  "features": 1
+ },
+ "wandb_url": "https://forge.coreweave.com/wandb/sascha_ai/art-p1/runs/zpcf849u",
+ "wandb_id": "zpcf849u",
+ "train_examples_used": 16801,
+ "steps_per_epoch": 263,
+ "epoch": 18,
+ "last": {
+  "train": {
+   "loss": 0.51864,
+   "acc": 0.72972
+  },
+  "val": {
+   "loss": 0.58079,
+   "acc": 0.681,
+   "n": 1000
+  }
+ },
+ "best": {
+  "epoch": 15,
+  "val_loss": 0.58026,
+  "val_acc": 0.69,
+  "train_loss": 0.54379,
+  "train_acc": 0.70877
+ },
+ "final": {
+  "score": 0.69,
+  "val_acc": 0.69,
+  "val_loss": 0.58026,
+  "epoch": 15
+ },
+ "finished": "2026-10-19T16:43:56",
+ "stop_reason": "early stopping: no better validation loss for 3 epochs",
+ "epochs_run": 18
+}
