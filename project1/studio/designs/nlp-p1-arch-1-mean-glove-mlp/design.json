@@ -1,0 +1,217 @@
+{
+ "name": "NLP P1 \u00b7 Arch 1 (mean GloVe + MLP)",
+ "description": "The project's architecture 1 as planned: each sentence becomes the mean of its GloVe vectors; [O1, O2, h] (900 numbers) go through Linear(900\u2192256) \u2192 ReLU \u2192 Linear(256\u21921) = a score for h. Runs for h1 and h2 with the same weights. Only the classifier is trained.",
+ "source": "art",
+ "template": "arch1",
+ "graph": {
+  "nodes": [
+   {
+    "id": "in_o1",
+    "op": "input",
+    "params": {
+     "port": "o1"
+    },
+    "pos": [
+     0,
+     0
+    ]
+   },
+   {
+    "id": "in_o2",
+    "op": "input",
+    "params": {
+     "port": "o2"
+    },
+    "pos": [
+     0,
+     160
+    ]
+   },
+   {
+    "id": "in_h",
+    "op": "input",
+    "params": {
+     "port": "h"
+    },
+    "pos": [
+     0,
+     320
+    ]
+   },
+   {
+    "id": "mean_o1",
+    "op": "set_pool",
+    "params": {
+     "mode": "mean+max"
+    },
+    "pos": [
+     280,
+     0
+    ]
+   },
+   {
+    "id": "mean_o2",
+    "op": "set_pool",
+    "params": {
+     "mode": "mean+max"
+    },
+    "pos": [
+     280,
+     160
+    ]
+   },
+   {
+    "id": "mean_h",
+    "op": "set_pool",
+    "params": {
+     "mode": "mean+max"
+    },
+    "pos": [
+     280,
+     320
+    ]
+   },
+   {
+    "id": "join",
+    "op": "concat",
+    "params": {},
+    "pos": [
+     560,
+     160
+    ]
+   },
+   {
+    "id": "classifier",
+    "op": "mlp",
+    "params": {
+     "sizes": [
+      256,
+      1
+     ],
+     "act": "relu",
+     "dropout": 0.2
+    },
+    "pos": [
+     840,
+     160
+    ]
+   },
+   {
+    "id": "score",
+    "op": "out_score",
+    "params": {},
+    "pos": [
+     1120,
+     160
+    ]
+   }
+  ],
+  "edges": [
+   {
+    "from": "in_o1",
+    "to": "mean_o1.in"
+   },
+   {
+    "from": "in_o2",
+    "to": "mean_o2.in"
+   },
+   {
+    "from": "in_h",
+    "to": "mean_h.in"
+   },
+   {
+    "from": "mean_o1",
+    "to": "join.in"
+   },
+   {
+    "from": "mean_o2",
+    "to": "join.in"
+   },
+   {
+    "from": "mean_h",
+    "to": "join.in"
+   },
+   {
+    "from": "join",
+    "to": "classifier.in"
+   },
+   {
+    "from": "classifier",
+    "to": "score.score"
+   }
+  ]
+ },
+ "inputs": {
+  "text": {
+   "steps": [
+    {
+     "op": "normalize"
+    },
+    {
+     "op": "lowercase"
+    },
+    {
+     "op": "tokenize",
+     "mode": "glove"
+    },
+    {
+     "op": "remove_punct",
+     "off": true
+    },
+    {
+     "op": "remove_stopwords",
+     "off": true,
+     "keep": "not n't no never nothing nobody none nowhere neither nor without cannot before after then because but so again too only until while"
+    }
+   ],
+   "embedding": {
+    "name": "glove",
+    "dim": 300,
+    "unknown": "zero",
+    "fallback_lower": true
+   },
+   "format": "score_each"
+  },
+  "text_features": [
+   {
+    "name": "Higher_Similarity",
+    "formula": "cos(h, o1) + cos(h, o2)",
+    "off": false
+   }
+  ],
+  "features": [],
+  "extras": {},
+  "disabled": []
+ },
+ "reward": {},
+ "training": {
+  "epochs": 30,
+  "batch_size": 64,
+  "lr": 0.001,
+  "weight_decay": 0,
+  "patience": 8,
+  "grad_clip": 1,
+  "train_fraction": 1,
+  "minutes": 60,
+  "seed": 0,
+  "optimizer": "adam",
+  "monitor": "val_loss",
+  "swap_augment": false,
+  "wandb": true,
+  "wandb_project": "art-p1",
+  "wandb_entity": "sascha_ai",
+  "threads": 2
+ },
+ "notes": "",
+ "scenario": {},
+ "id": "nlp-p1-arch-1-mean-glove-mlp",
+ "created": "2026-10-19T14:00:42",
+ "version": 5,
+ "updated": "2026-10-19T17:19:02",
+ "message": "before training",
+ "stats": {
+  "params": 461313,
+  "flops": 461056,
+  "errors": 0
+ }
+}

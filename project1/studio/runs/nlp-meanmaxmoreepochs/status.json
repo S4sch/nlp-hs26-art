@@ -1,0 +1,49 @@
+{
+ "state": "done",
+ "progress": 1.0,
+ "message": "",
+ "started": "2026-10-19T17:19:05",
+ "updated": "2026-10-19T17:21:32",
+ "minutes": 2.45,
+ "params": 461313,
+ "data": {
+  "vocabulary": 15800,
+  "unknown_types": 753,
+  "unknown_token_share": 0.00149,
+  "train_examples": 16801,
+  "validation_examples": 1000,
+  "features": 1
+ },
+ "wandb_url": "https://forge.coreweave.com/wandb/sascha_ai/art-p1/runs/dlhwj09t",
+ "wandb_id": "dlhwj09t",
+ "train_examples_used": 16801,
+ "steps_per_epoch": 263,
+ "epoch": 21,
+ "last": {
+  "train": {
+   "loss": 0.62332,
+   "acc": 0.63806
+  },
+  "val": {
+   "loss": 0.64201,
+   "acc": 0.643,
+   "n": 1000
+  }
+ },
+ "best": {
+  "epoch": 13,
+  "val_loss": 0.62875,
+  "val_acc": 0.634,
+  "train_loss": 0.62354,
+  "train_acc": 0.6421
+ },
+ "final": {
+  "score": 0.634,
+  "val_acc": 0.634,
+  "val_loss": 0.62875,
+  "epoch": 13
+ },
+ "finished": "2026-10-19T17:21:32",
+ "stop_reason": "early stopping: no better validation loss for 8 epochs",
+ "epochs_run": 21
+}

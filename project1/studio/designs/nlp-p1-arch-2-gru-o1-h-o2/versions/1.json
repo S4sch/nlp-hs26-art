@@ -1,0 +1,183 @@
+{
+ "name": "NLP P1 \u00b7 Arch 2 (GRU, O1 \u2192 h \u2192 O2)",
+ "description": "The project's architecture 2: the words of O1, h and O2 are joined into one sequence (the story in order) and read by a 2-layer GRU (frozen GloVe inputs). Its last state goes through a 2-layer ReLU classifier to the score of h.",
+ "source": "art",
+ "template": "arch2_gru",
+ "graph": {
+  "nodes": [
+   {
+    "id": "in_o1",
+    "op": "input",
+    "params": {
+     "port": "o1"
+    },
+    "pos": [
+     0,
+     0
+    ]
+   },
+   {
+    "id": "in_h",
+    "op": "input",
+    "params": {
+     "port": "h"
+    },
+    "pos": [
+     0,
+     160
+    ]
+   },
+   {
+    "id": "in_o2",
+    "op": "input",
+    "params": {
+     "port": "o2"
+    },
+    "pos": [
+     0,
+     320
+    ]
+   },
+   {
+    "id": "story",
+    "op": "seq_join",
+    "params": {
+     "marker": true,
+     "part_ids": false
+    },
+    "pos": [
+     280,
+     160
+    ]
+   },
+   {
+    "id": "reader",
+    "op": "rnn",
+    "params": {
+     "cell": "gru",
+     "hidden": 128,
+     "layers": 2,
+     "bidirectional": false,
+     "dropout": 0.2
+    },
+    "pos": [
+     560,
+     160
+    ]
+   },
+   {
+    "id": "classifier",
+    "op": "mlp",
+    "params": {
+     "sizes": [
+      128,
+      1
+     ],
+     "act": "relu",
+     "dropout": 0.2
+    },
+    "pos": [
+     840,
+     160
+    ]
+   },
+   {
+    "id": "score",
+    "op": "out_score",
+    "params": {},
+    "pos": [
+     1120,
+     160
+    ]
+   }
+  ],
+  "edges": [
+   {
+    "from": "in_o1",
+    "to": "story.in"
+   },
+   {
+    "from": "in_h",
+    "to": "story.in"
+   },
+   {
+    "from": "in_o2",
+    "to": "story.in"
+   },
+   {
+    "from": "story",
+    "to": "reader.in"
+   },
+   {
+    "from": "reader.last",
+    "to": "classifier.in"
+   },
+   {
+    "from": "classifier",
+    "to": "score.score"
+   }
+  ]
+ },
+ "inputs": {
+  "text": {
+   "steps": [
+    {
+     "op": "normalize"
+    },
+    {
+     "op": "lowercase"
+    },
+    {
+     "op": "tokenize",
+     "mode": "glove"
+    },
+    {
+     "op": "remove_punct",
+     "off": true
+    },
+    {
+     "op": "remove_stopwords",
+     "off": true,
+     "keep": "not n't no never nothing nobody none nowhere neither nor without cannot before after then because but so again too only until while"
+    }
+   ],
+   "embedding": {
+    "name": "glove",
+    "dim": 300,
+    "unknown": "zero",
+    "fallback_lower": true
+   },
+   "format": "score_each"
+  },
+  "text_features": [],
+  "features": [],
+  "extras": {},
+  "disabled": []
+ },
+ "reward": {},
+ "training": {
+  "epochs": 30,
+  "batch_size": 64,
+  "lr": 0.001,
+  "weight_decay": 0.0,
+  "patience": 3,
+  "grad_clip": 1.0,
+  "train_fraction": 1.0,
+  "minutes": 60,
+  "seed": 0,
+  "optimizer": "adam",
+  "monitor": "val_loss",
+  "swap_augment": false,
+  "wandb": true,
+  "wandb_project": "art-p1",
+  "wandb_entity": "sascha_ai",
+  "threads": 2
+ },
+ "notes": "",
+ "scenario": {},
+ "id": "nlp-p1-arch-2-gru-o1-h-o2",
+ "created": "2026-10-19T14:00:42",
+ "version": 1,
+ "updated": "2026-10-19T14:00:42",
+ "message": "created from template Arch 2: GRU reads O1 \u2192 h \u2192 O2"
+}

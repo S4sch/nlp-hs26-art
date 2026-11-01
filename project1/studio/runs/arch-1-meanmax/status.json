@@ -1,0 +1,49 @@
+{
+ "state": "done",
+ "progress": 1.0,
+ "message": "",
+ "started": "2026-10-19T17:04:33",
+ "updated": "2026-10-19T17:05:39",
+ "minutes": 1.11,
+ "params": 461313,
+ "data": {
+  "vocabulary": 15800,
+  "unknown_types": 753,
+  "unknown_token_share": 0.00149,
+  "train_examples": 16801,
+  "validation_examples": 1000,
+  "features": 1
+ },
+ "wandb_url": "https://forge.coreweave.com/wandb/sascha_ai/art-p1/runs/gucty9b9",
+ "wandb_id": "gucty9b9",
+ "train_examples_used": 16801,
+ "steps_per_epoch": 263,
+ "epoch": 8,
+ "last": {
+  "train": {
+   "loss": 0.639,
+   "acc": 0.62562
+  },
+  "val": {
+   "loss": 0.64547,
+   "acc": 0.646,
+   "n": 1000
+  }
+ },
+ "best": {
+  "epoch": 5,
+  "val_loss": 0.64111,
+  "val_acc": 0.624,
+  "train_loss": 0.64199,
+  "train_acc": 0.62163
+ },
+ "final": {
+  "score": 0.624,
+  "val_acc": 0.624,
+  "val_loss": 0.64111,
+  "epoch": 5
+ },
+ "finished": "2026-10-19T17:05:39",
+ "stop_reason": "early stopping: no better validation loss for 3 epochs",
+ "epochs_run": 8
+}
