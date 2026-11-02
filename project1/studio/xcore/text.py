@@ -110,6 +110,12 @@ STEPS = {
     "replace_words": {"label": "Replace words", "where": "tokens", "help": "a=b, c=d: every 'a' becomes 'b'.",
                       "why": "Map words GloVe does not know to ones it does, or merge words (e.g. names -> 'he').",
                       "params": [{"key": "pairs", "type": "text", "default": "", "help": "word=replacement, comma separated"}]},
+    "stem": {"label": "Stemming (Porter)", "where": "tokens", "help": "Cuts words down to a stem by rules: happily -> happili, decided -> decid.",
+             "why": "Merges word forms. But the stems are often no real words, so GloVe has no vector for them (watch the unknown words).",
+             "params": []},
+    "lemmatize": {"label": "Lemmatization (WordNet)", "where": "tokens", "help": "Turns each word into its dictionary form, using its part of speech: went -> go, shops -> shop.",
+                  "why": "Merges word forms and keeps real words (GloVe knows them). Loses tense and number (went / goes / going all become 'go').",
+                  "params": []},
     "max_len": {"label": "Cut to a maximum length", "where": "tokens", "help": "Keeps only the first N tokens of each sentence.",
                 "why": "Sentences here are short (about 9 words), so this rarely bites; for RNNs it caps the cost.",
                 "params": [{"key": "n", "type": "int", "default": 40, "min": 1, "max": 200, "help": "maximum number of tokens"}]},
@@ -178,9 +184,24 @@ def _token_step(op, st, toks):
             r = mp.get(t.lower())
             out.extend(r.split() if r is not None else [t])
         return out
+    if op == "stem":
+        return [_nltk()["stem"](t) for t in toks]
+    if op == "lemmatize":
+        nl = _nltk()
+        return [nl["lemma"](t, nl["pos"](tag)) for t, tag in nl["tag"](toks)] if toks else toks
     if op == "max_len":
         return toks[:max(1, int(step_param(st, "n")))]
     return toks
+
+
+@functools.lru_cache(maxsize=1)
+def _nltk():
+    """Stemmer / lemmatizer (nltk, data in the venv's nltk_data), loaded on first use."""
+    import nltk
+    from nltk.stem import PorterStemmer, WordNetLemmatizer
+    lem = WordNetLemmatizer()
+    pos = {"J": "a", "V": "v", "R": "r"}
+    return {"stem": PorterStemmer().stem, "lemma": lem.lemmatize, "tag": nltk.pos_tag, "pos": lambda tag: pos.get(tag[:1], "n")}
 
 
 def run_pipeline(text, steps, trace=False):

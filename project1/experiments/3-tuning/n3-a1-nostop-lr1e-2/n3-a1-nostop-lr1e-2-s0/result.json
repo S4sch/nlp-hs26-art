@@ -1,0 +1,34 @@
+{
+ "params": 230913,
+ "data": {
+  "vocabulary": 15674,
+  "unknown_types": 752,
+  "unknown_token_share": 0.0024,
+  "train_examples": 16801,
+  "validation_examples": 1000,
+  "features": 1
+ },
+ "best": {
+  "epoch": 6,
+  "val_loss": 0.59736,
+  "val_acc": 0.695,
+  "train_loss": 0.5897,
+  "train_acc": 0.67091
+ },
+ "last": {
+  "train": {
+   "loss": 0.53667,
+   "acc": 0.71674
+  },
+  "val": {
+   "loss": 0.60251,
+   "acc": 0.67,
+   "n": 1000
+  }
+ },
+ "test": null,
+ "epochs_run": 11,
+ "stop_reason": "early stopping: no better validation loss for 5 epochs",
+ "minutes": 2.29,
+ "wandb_url": "https://forge.coreweave.com/wandb/sascha_ai/art-p1/runs/wrvqoe5v"
+}

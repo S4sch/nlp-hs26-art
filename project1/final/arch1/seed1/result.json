@@ -1,0 +1,22 @@
+{
+ "params": 461825,
+ "best": {
+  "epoch": 18,
+  "val_loss": 0.5572,
+  "val_acc": 0.716,
+  "train_loss": 0.41392,
+  "train_acc": 0.81239
+ },
+ "test": {
+  "loss": 0.9853,
+  "acc": 0.52872,
+  "n": 1532,
+  "at": "2026-11-02T10:23:31",
+  "epoch": 18,
+  "forced": false,
+  "previous": null
+ },
+ "epochs_run": 23,
+ "stop_reason": "early stopping: no better validation loss for 5 epochs",
+ "wandb_url": "https://forge.coreweave.com/wandb/sascha_ai/art-p1/runs/ew4cnet9"
+}

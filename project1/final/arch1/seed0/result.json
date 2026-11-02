@@ -1,0 +1,22 @@
+{
+ "params": 461825,
+ "best": {
+  "epoch": 20,
+  "val_loss": 0.55323,
+  "val_acc": 0.716,
+  "train_loss": 0.38067,
+  "train_acc": 0.83495
+ },
+ "test": {
+  "loss": 0.99788,
+  "acc": 0.53133,
+  "n": 1532,
+  "at": "2026-11-02T10:23:20",
+  "epoch": 20,
+  "forced": false,
+  "previous": null
+ },
+ "epochs_run": 25,
+ "stop_reason": "early stopping: no better validation loss for 5 epochs",
+ "wandb_url": "https://forge.coreweave.com/wandb/sascha_ai/art-p1/runs/mpq6bn26"
+}
