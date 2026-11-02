@@ -2,7 +2,7 @@
 
 Two architectures from the project description, all with frozen GloVe 6B 300d vectors:
 
-1. **Arch 1:** each sentence becomes the mean of its word vectors; [O1, O2, h] + one similarity feature go through a 2-layer
+1. **Arch 1:** each sentence becomes the mean of its word vectors; [O1, O2, h] (900 numbers) go through a 2-layer
    classifier (ReLU) that gives h a score. h1 and h2 are scored with the same weights; softmax over the two scores. Only the
    classifier is trained.
 2. **Arch 2:** O1 → h → O2 are read as one sequence (an all-zero vector between the sentences, plus 3 "part id" numbers per word

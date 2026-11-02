@@ -18,7 +18,7 @@ Final models, chosen on the validation split (lowest mean validation loss over 3
 
 | | Model | Val acc | Val loss | **Test acc** | Test loss |
 |---|---|---|---|---|---|
-| Arch 1 | mean GloVe 300d (stopwords removed) of O1, O2, h + 1 similarity feature → MLP 512 ReLU, dropout 0.2; Adam lr 3e-4 | 71.5 | 0.555 | **53.1** | 0.98 |
+| Arch 1 | mean GloVe 300d (stopwords removed) of O1, O2, h (900 numbers) → MLP 512 ReLU, dropout 0.2; Adam lr 3e-4 | 71.5 | 0.555 | **53.1** | 0.98 |
 | Arch 2 | O1 → h → O2 as one sequence (frozen GloVe 300d, part ids) → 2-layer GRU 128 → MLP 128 ReLU; Adam lr 3e-3, batch 64 | 70.1 | 0.561 | **53.5** | 0.87 |
 | Chance | | 50 | 0.693 | 50 | 0.693 |
 
