@@ -1,4 +1,4 @@
-# P1 test plan (fixed 2026-11-02 10:35, BEFORE any test-set evaluation)
+# P1 test plan (fixed 2026-11-02 10:23, BEFORE any test-set evaluation)
 Selection rule: lowest mean best val loss over 3 seeds (val = 1000 examples). Tie (< 1 seed sd) -> smaller model.
 
 Edge check (slide 53) done: Arch 1 lr 1e-4 / hidden 1024 and GRU lr 1e-2 did not beat the range -> plateau, ranges closed.
