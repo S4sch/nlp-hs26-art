@@ -37,14 +37,14 @@ The Studio itself was written by my coding agent env in OpenClaw, with mostly Cl
 
 Arch 1 final as a graph (O1, O2, h → mean over words → join, 900 numbers → MLP 512 → score):
 
-![Arch 1 final in the studio](docs/studio-arch1-model.png)
+![Arch 1 final in the studio](project1/docs/studio-arch1-model.png)
 
 The preprocessing, step by step on a real example (stopwords crossed out), and what the model receives:
 
-![Inputs page](docs/studio-arch1-inputs.png)
+![Inputs page](project1/docs/studio-arch1-inputs.png)
 
 The code generated from the graph, next to the raw design:
 
-![Code page](docs/studio-arch1-code.png)
+![Code page](project1/docs/studio-arch1-code.png)
 
-Arch 2 final (O1 → h → O2 joined into one sequence → 2-layer GRU → MLP → score): [screenshot](docs/studio-arch2-model.png)
+Arch 2 final (O1 → h → O2 joined into one sequence → 2-layer GRU → MLP → score): [screenshot](project1/docs/studio-arch2-model.png)
