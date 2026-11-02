@@ -13,9 +13,30 @@ Training: cross-entropy over the two scores, Adam, gradient clipping 1, up to 30
 has not improved for 5 epochs; the weights of the best epoch (lowest validation loss) are kept. Every important setting was run
 with 3 seeds (some with 5), and settings are compared by their **mean** over the seeds.
 
+## How the experiments were made: AI Experiment Studio
+
+I did not write a training script per experiment. The models are built as graphs in my own experiment studio: pick the blocks,
+switch preprocessing steps on/off, set the training options; the studio checks the shapes, generates the code from the graph,
+trains, and logs every run (locally and to W&B). Each run's `config.json` is the full design.
+
+Arch 1 final as a graph (O1, O2, h → mean over words → join, 900 numbers → MLP 512 → score):
+
+![Arch 1 final in the studio](docs/studio-arch1-model.png)
+
+The preprocessing, step by step on a real example (stopwords crossed out), and what the model receives:
+
+![Inputs page](docs/studio-arch1-inputs.png)
+
+The code generated from the graph, next to the raw design:
+
+![Code page](docs/studio-arch1-code.png)
+
+Arch 2 final (O1 → h → O2 joined into one sequence → 2-layer GRU → MLP → score): [screenshot](docs/studio-arch2-model.png)
+
 ## Folder structure
 
 ```
+docs/           screenshots of the studio
 final/          ⭐ the two final models: config, weights (best.pt), validation + test predictions, results; TEST_PLAN.md
 experiments/    every run (config.json + result.json), sorted by question; a README per folder with all results
   0-first-runs/      first tries (19.10)
