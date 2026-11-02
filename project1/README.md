@@ -18,6 +18,7 @@ with 3 seeds (some with 5), and settings are compared by their **mean** over the
 I did not write a training script per experiment. The models are built as graphs in my own experiment studio: pick the blocks,
 switch preprocessing steps on/off, set the training options; the studio checks the shapes, generates the code from the graph,
 trains, and logs every run (locally and to W&B). Each run's `config.json` is the full design.
+The Studio itself was written by my coding agent env in OpenClaw, with mostly Claude. Instead of changing the code, i can change the settings and composition of the model within that studio and it automatically creates the code output and training runs for it. That also allows me to quickly make a few experiments.
 
 Arch 1 final as a graph (O1, O2, h → mean over words → join, 900 numbers → MLP 512 → score):
 
@@ -120,6 +121,7 @@ Tuning (grid search, 3 seeds per point, on a GPU):
 ## Use of a coding agent
 
 I used a coding agent (Claude, via OpenClaw) for this project. It wrote most of the code in `studio/` (ART source, preprocessing
-pipeline, trainer, W&B logging) and `standalone/`, ran most of the experiment batches and helped analyse the results. The research
-questions, the expectations (`../EXPECTATIONS.md`), the choice of experiments and the conclusions were discussed and decided by me;
-some experiments I set up and ran myself in the studio (e.g. GRU without stopwords, GRU dropout 0.4).
+pipeline, trainer, W&B logging) and `standalone/`, ran most of the experiment batches and helped analyse the results.
+
+The research questions, the experiment decisions, conclusions, the expectations (`../EXPECTATIONS.md`) were all discussed and decided by me;
+some experiments I set up and ran in the studio directly (e.g. GRU without stopwords, GRU dropout 0.4), others were queued up by the agent with my decisions beforehand.
