@@ -48,19 +48,3 @@ The code generated from the graph, next to the raw design:
 ![Code page](docs/studio-arch1-code.png)
 
 Arch 2 final (O1 → h → O2 joined into one sequence → 2-layer GRU → MLP → score): [screenshot](docs/studio-arch2-model.png)
-
-## Folder structure
-
-```
-docs/           screenshots of the studio
-final/          ⭐ the two final models: config, weights (best.pt), validation + test predictions, results; TEST_PLAN.md
-experiments/    every run (config.json + result.json), sorted by question; a README per folder with all results
-  0-first-runs/      first tries (19.10)
-  1-preprocessing/   stopwords, punctuation, stemming, lemmatization, TF-IDF, GloVe size
-  2-architecture/    pooling, pair features, all-in-one, GRU / BiGRU / BiLSTM, part ids
-  3-tuning/          learning rate, hidden size, dropout, batch size (grid search)
-results/        all_runs.csv (one row per run), settings.csv (one row per setting, mean over seeds)
-standalone/     a single-file PyTorch version of the two final models (runs on its own)
-studio/         the code the runs were made with (excerpt of my experiment studio, see below)
-```
-
