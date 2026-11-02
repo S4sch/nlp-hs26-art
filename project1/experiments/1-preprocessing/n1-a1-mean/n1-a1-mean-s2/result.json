@@ -1,0 +1,42 @@
+{
+ "params": 230913,
+ "data": {
+  "vocabulary": 15800,
+  "unknown_types": 753,
+  "unknown_token_share": 0.00149,
+  "train_examples": 16801,
+  "validation_examples": 1000,
+  "features": 1
+ },
+ "best": {
+  "epoch": 21,
+  "val_loss": 0.56947,
+  "val_acc": 0.695,
+  "train_loss": 0.49028,
+  "train_acc": 0.7515
+ },
+ "last": {
+  "train": {
+   "loss": 0.44182,
+   "acc": 0.78549
+  },
+  "val": {
+   "loss": 0.58327,
+   "acc": 0.694,
+   "n": 1000
+  }
+ },
+ "test": {
+  "loss": 0.98506,
+  "acc": 0.53133,
+  "n": 1532,
+  "at": "2026-11-02T11:05:45",
+  "epoch": 21,
+  "forced": false,
+  "previous": null
+ },
+ "epochs_run": 26,
+ "stop_reason": "early stopping: no better validation loss for 5 epochs",
+ "minutes": 2.44,
+ "wandb_url": "https://forge.coreweave.com/wandb/sascha_ai/art-p1/runs/nj83guft"
+}

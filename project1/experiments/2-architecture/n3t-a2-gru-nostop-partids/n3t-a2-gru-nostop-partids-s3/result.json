@@ -1,0 +1,42 @@
+{
+ "params": 281985,
+ "data": {
+  "vocabulary": 15674,
+  "unknown_types": 752,
+  "unknown_token_share": 0.0024,
+  "train_examples": 16801,
+  "validation_examples": 1000,
+  "features": 0
+ },
+ "best": {
+  "epoch": 4,
+  "val_loss": 0.56846,
+  "val_acc": 0.701,
+  "train_loss": 0.50299,
+  "train_acc": 0.74769
+ },
+ "last": {
+  "train": {
+   "loss": 0.11825,
+   "acc": 0.95084
+  },
+  "val": {
+   "loss": 1.39885,
+   "acc": 0.705,
+   "n": 1000
+  }
+ },
+ "test": {
+  "loss": 1.01638,
+  "acc": 0.52611,
+  "n": 1532,
+  "at": "2026-11-02T11:07:03",
+  "epoch": 4,
+  "forced": false,
+  "previous": null
+ },
+ "epochs_run": 9,
+ "stop_reason": "early stopping: no better validation loss for 5 epochs",
+ "minutes": 0.38,
+ "wandb_url": "https://forge.coreweave.com/wandb/sascha_ai/art-p1/runs/plhpezgp"
+}

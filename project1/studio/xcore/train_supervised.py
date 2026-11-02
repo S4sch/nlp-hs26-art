@@ -23,6 +23,7 @@ import torch
 import torch.nn.functional as F
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+DEVICE = torch.device(__import__("os").environ.get("ART_DEVICE", "cpu"))  # ART_DEVICE=cuda: train on the GPU (checkpoints load on the CPU)
 sys.path.insert(0, str(ROOT))
 from xcore import text as T  # noqa: E402
 from xcore.sources import get as get_source  # noqa: E402
@@ -129,8 +130,8 @@ class Run:
             idx = np.arange(a, min(n, a + bs))
             b = enc.batch(split, idx)
             lg = model.logits(b)
-            losses.append(F.cross_entropy(lg, b["y"], reduction="sum").item())
-            probs.append(torch.softmax(lg, -1)[:, 1].numpy())
+            losses.append(F.cross_entropy(lg, b["y"].to(lg.device), reduction="sum").item())
+            probs.append(torch.softmax(lg, -1)[:, 1].cpu().numpy())
         p2 = np.concatenate(probs)
         y = enc.labels[split]
         pred = (p2 > 0.5).astype(np.int64)
@@ -149,7 +150,7 @@ class Run:
         data = {"vocabulary": len(enc.vocab), "unknown_types": len(enc.unknown), "unknown_token_share": round(unk_tok / max(1, len(toks)), 5),
                 "train_examples": enc.n("train"), "validation_examples": enc.n("validation"), "features": enc.n_features}
         self.metric(phase="data", epoch=0, **data)
-        model = ArtModel(self.src, self.design, enc.matrix)
+        model = ArtModel(self.src, self.design, enc.matrix, enc.weights).to(DEVICE)
         params = [p for p in model.parameters() if p.requires_grad]
         n_params = sum(p.numel() for p in params)
         lr, wd = float(tr["lr"]), float(tr["weight_decay"])
@@ -182,7 +183,8 @@ class Run:
                 idx = order[k * bs:(k + 1) * bs]
                 b = enc.batch("train", idx, swap=(rng.random(len(idx)) < 0.5) if swap else None)
                 lg = model.logits(b)
-                loss = F.cross_entropy(lg, b["y"])
+                y = b["y"].to(lg.device)
+                loss = F.cross_entropy(lg, y)
                 opt.zero_grad()
                 loss.backward()
                 gn = None
@@ -190,7 +192,7 @@ class Run:
                     gn = float(torch.nn.utils.clip_grad_norm_(params, float(tr["grad_clip"])))
                 opt.step()
                 tl += loss.item() * len(idx)
-                tc += int((lg.argmax(-1) == b["y"]).sum())
+                tc += int((lg.argmax(-1) == y).sum())
                 tn += len(idx)
                 if (k + 1) % log_every == 0:
                     line = {"loss": round(loss.item(), 5)}
@@ -244,7 +246,7 @@ class Run:
             raise SystemExit("no best checkpoint (the run has not finished an epoch)")
         torch.manual_seed(0)
         enc = Encoded(self.design.get("inputs", {}), splits=("test",))
-        model = ArtModel(self.src, self.design, enc.matrix)
+        model = ArtModel(self.src, self.design, enc.matrix, enc.weights)
         sd = torch.load(str(ck), map_location="cpu")
         model.load_state_dict(sd["model"])
         res, p2 = self.evaluate(model, enc, "test")

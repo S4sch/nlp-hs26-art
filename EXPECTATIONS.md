@@ -25,3 +25,15 @@ The RNN reads the words in order, so it can use word order and context within th
 has no real commonsense knowledge. On top of that, the training set is small (about 16.8k examples) for a
 2-layer RNN with far more parameters than the classifier in architecture 1, so there is a fair chance it will overfit.
 So i only expect a moderate gain over architecture 1.
+
+## Result (added 02.11.2026, after the one test run)
+
+| | Expected test acc | Actual test acc (mean of 3 seeds) | Validation acc |
+|---|---|---|---|
+| Architecture 1 | 55 % | 53.1 % | 71.5 % |
+| Architecture 2 | 59 % | 53.5 % | 70.1 % |
+
+- Both are only a little above chance, as expected for Arch 1. Arch 2 did **not** gain much over Arch 1: the GRU overfits after
+  3-4 epochs (train acc → 90 %+, validation loss rises), so word order did not help with frozen embeddings and 16.8k examples.
+- The big gap between validation (~71 %) and test (~53 %) was not expected in this size: the test split is adversarially filtered,
+  validation is not. Validation gains mostly came from surface cues (e.g. hypothesis length) that the test split removes.

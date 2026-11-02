@@ -1,0 +1,51 @@
+# Tuning: learning rate, hidden size, dropout, batch size (grid search on the tower GPU)
+
+One folder per setting, one subfolder per seed with `config.json` (full design + preprocessing + training settings) and `result.json` (best epoch, validation, test if tested).
+Sorted by mean validation loss (lower is better). Accuracy in %.
+
+- `n4-a1-lr0.0003-h1024-d0.2`: val loss 0.5544, val acc 71.3 (70.8-71.7, 3 seeds). grid search Arch 1, range extended (best was at the edge: lr 3e-4, hidden 512): lr 0.0003, hidden 1024, dropout 0.2
+- `n4-a1-lr0.0003-h512-d0.2` ⭐ Arch 1 FINAL: val loss 0.5553, val acc 71.5 (71.3-71.6, 3 seeds), **test 53.0**. grid search Arch 1 (no stopwords): lr 0.0003, hidden 512, dropout 0.2 - tower GPU
+- `n4-a1-lr0.0001-h1024-d0.2`: val loss 0.5560, val acc 71.4 (71.0-71.9, 3 seeds). grid search Arch 1, range extended (best was at the edge: lr 3e-4, hidden 512): lr 0.0001, hidden 1024, dropout 0.2
+- `n4-a1-lr0.001-h512-d0.2`: val loss 0.5583, val acc 70.8 (70.1-71.5, 3 seeds). grid search Arch 1 (no stopwords): lr 0.001, hidden 512, dropout 0.2 - tower GPU
+- `n4-a1-lr0.0003-h512-d0.5`: val loss 0.5584, val acc 71.3 (71.2-71.4, 3 seeds). grid search Arch 1 (no stopwords): lr 0.0003, hidden 512, dropout 0.5 - tower GPU
+- `n4-a1-lr0.0003-h256-d0.2`: val loss 0.5603, val acc 71.3 (71.1-71.6, 3 seeds). grid search Arch 1 (no stopwords): lr 0.0003, hidden 256, dropout 0.2 - tower GPU
+- `n4-a1-lr0.001-h512-d0.5`: val loss 0.5604, val acc 71.1 (70.4-72.2, 3 seeds). grid search Arch 1 (no stopwords): lr 0.001, hidden 512, dropout 0.5 - tower GPU
+- `n4-a2-lr0.003-h128-b64` ⭐ Arch 2 FINAL: val loss 0.5606, val acc 70.1 (68.8-71.6, 3 seeds), **test 53.5**. grid search Arch 2 GRU (no stopwords, part ids): lr 0.003, GRU hidden 128, batch 64 - tower GPU
+- `n4-a1-lr0.001-h256-d0.2`: val loss 0.5607, val acc 70.7 (69.9-71.6, 3 seeds). grid search Arch 1 (no stopwords): lr 0.001, hidden 256, dropout 0.2 - tower GPU
+- `n4-a2-lr0.003-h64-b64`: val loss 0.5612, val acc 70.5 (69.6-71.5, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.003, GRU hidden 64, batch 64 - tower GPU
+- `n4-a1-lr0.0001-h512-d0.2`: val loss 0.5619, val acc 71.3 (70.8-72.4, 3 seeds). grid search Arch 1, range extended (best was at the edge: lr 3e-4, hidden 512): lr 0.0001, hidden 512, dropout 0.2
+- `n4-a2-lr0.003-h256-b256`: val loss 0.5627, val acc 70.2 (69.2-70.7, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.003, GRU hidden 256, batch 256 - tower GPU
+- `n4-a2-lr0.003-h256-b64`: val loss 0.5627, val acc 70.1 (69.5-70.8, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.003, GRU hidden 256, batch 64 - tower GPU
+- `n4-a1-lr0.003-h256-d0.2`: val loss 0.5643, val acc 70.0 (69.0-70.6, 3 seeds). grid search Arch 1 (no stopwords): lr 0.003, hidden 256, dropout 0.2 - tower GPU
+- `n4-a1-lr0.001-h256-d0.5`: val loss 0.5649, val acc 70.7 (70.1-71.1, 3 seeds). grid search Arch 1 (no stopwords): lr 0.001, hidden 256, dropout 0.5 - tower GPU
+- `n4-a1-lr0.0003-h256-d0.5`: val loss 0.5666, val acc 70.4 (69.9-70.9, 3 seeds). grid search Arch 1 (no stopwords): lr 0.0003, hidden 256, dropout 0.5 - tower GPU
+- `n4-a1-lr0.001-h128-d0.2`: val loss 0.5671, val acc 70.5 (69.9-70.8, 3 seeds). grid search Arch 1 (no stopwords): lr 0.001, hidden 128, dropout 0.2 - tower GPU
+- `n4-a1-lr0.0003-h128-d0.2`: val loss 0.5678, val acc 71.0 (69.8-72.5, 3 seeds). grid search Arch 1 (no stopwords): lr 0.0003, hidden 128, dropout 0.2 - tower GPU
+- `n4-a1-lr0.003-h512-d0.2`: val loss 0.5681, val acc 70.4 (69.1-72.5, 3 seeds). grid search Arch 1 (no stopwords): lr 0.003, hidden 512, dropout 0.2 - tower GPU
+- `n4-a2-lr0.001-h256-b64`: val loss 0.5691, val acc 70.9 (70.5-71.4, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.001, GRU hidden 256, batch 64 - tower GPU
+- `n4-a2-lr0.001-h128-b64`: val loss 0.5694, val acc 69.8 (69.1-70.4, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.001, GRU hidden 128, batch 64 - tower GPU
+- `n4-a2-lr0.003-h128-b256`: val loss 0.5706, val acc 69.0 (67.2-70.1, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.003, GRU hidden 128, batch 256 - tower GPU
+- `n4-a1-lr0.001-h128-d0.5`: val loss 0.5723, val acc 70.2 (69.9-70.5, 3 seeds). grid search Arch 1 (no stopwords): lr 0.001, hidden 128, dropout 0.5 - tower GPU
+- `n4-a2-lr0.001-h256-b256`: val loss 0.5733, val acc 70.2 (69.8-70.9, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.001, GRU hidden 256, batch 256 - tower GPU
+- `n4-a1-lr0.003-h512-d0.5`: val loss 0.5756, val acc 69.6 (69.4-69.8, 3 seeds). grid search Arch 1 (no stopwords): lr 0.003, hidden 512, dropout 0.5 - tower GPU
+- `n4-a1-lr0.003-h128-d0.2`: val loss 0.5757, val acc 69.8 (68.5-70.5, 3 seeds). grid search Arch 1 (no stopwords): lr 0.003, hidden 128, dropout 0.2 - tower GPU
+- `n1-a2-gru-wd`: val loss 0.5777, val acc 69.5 (69.5, 1 seed). Arch 2 GRU, only change: AdamW weight decay 0.01 (against overfitting)
+- `n4-a1-lr0.0003-h128-d0.5`: val loss 0.5783, val acc 69.5 (68.6-70.5, 3 seeds). grid search Arch 1 (no stopwords): lr 0.0003, hidden 128, dropout 0.5 - tower GPU
+- `n3-a1-nostop-lr1e-4`: val loss 0.5805, val acc 69.6 (68.9-70.1, 3 seeds). Arch 1 without stopwords, only change: learning rate 0.0001 (sweep 1e-2 / 1e-3 / 1e-4, as in the project slides)
+- `n4-a1-lr0.003-h256-d0.5`: val loss 0.5805, val acc 69.1 (68.5-69.6, 3 seeds). grid search Arch 1 (no stopwords): lr 0.003, hidden 256, dropout 0.5 - tower GPU
+- `n4-a2-lr0.003-h64-b256`: val loss 0.5819, val acc 68.6 (67.3-69.4, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.003, GRU hidden 64, batch 256 - tower GPU
+- `n4-a2-lr0.001-h64-b64`: val loss 0.5851, val acc 69.0 (67.5-70.4, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.001, GRU hidden 64, batch 64 - tower GPU
+- `n1-a2-gru-lr5e4`: val loss 0.5861, val acc 70.0 (69.3-70.6, 2 seeds). Arch 2 GRU, only change: lr 5e-4 (v1 overfit after epoch 3)
+- `n4-a2-lr0.0003-h256-b64`: val loss 0.5889, val acc 69.2 (68.6-70.1, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.0003, GRU hidden 256, batch 64 - tower GPU
+- `n4-a1-lr0.003-h128-d0.5`: val loss 0.5910, val acc 68.8 (68.0-69.2, 3 seeds). grid search Arch 1 (no stopwords): lr 0.003, hidden 128, dropout 0.5 - tower GPU
+- `n2-a2-gru-drop04`: val loss 0.5929, val acc 67.0 (67.0, 1 seed). Arch 2 GRU, only change: dropout 0.4 (GRU between layers + classifier) against overfitting - Sascha's experiment 02.11
+- `n4-a2-lr0.001-h64-b256`: val loss 0.5947, val acc 68.5 (67.7-69.1, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.001, GRU hidden 64, batch 256 - tower GPU
+- `n3-a1-nostop-lr1e-2`: val loss 0.5951, val acc 69.1 (68.7-69.5, 3 seeds). Arch 1 without stopwords, only change: learning rate 0.01 (sweep 1e-2 / 1e-3 / 1e-4, as in the project slides)
+- `n4-a2-lr0.001-h128-b256`: val loss 0.5959, val acc 67.7 (65.8-69.1, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.001, GRU hidden 128, batch 256 - tower GPU
+- `n4-a2-lr0.0003-h256-b256`: val loss 0.5963, val acc 68.5 (67.6-69.1, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.0003, GRU hidden 256, batch 256 - tower GPU
+- `n4-a2-lr0.0003-h128-b64`: val loss 0.5971, val acc 68.2 (67.0-68.8, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.0003, GRU hidden 128, batch 64 - tower GPU
+- `n4-a2-lr0.0003-h64-b64`: val loss 0.6003, val acc 67.2 (66.4-68.0, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.0003, GRU hidden 64, batch 64 - tower GPU
+- `n4-a2-lr0.0003-h128-b256`: val loss 0.6018, val acc 68.0 (67.6-68.3, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.0003, GRU hidden 128, batch 256 - tower GPU
+- `n4-a2-lr0.0003-h64-b256`: val loss 0.6021, val acc 67.4 (66.8-67.9, 3 seeds). grid search Arch 2 GRU (no stopwords, part ids): lr 0.0003, GRU hidden 64, batch 256 - tower GPU
+- `n4-a2-lr0.01-h128-b64`: val loss 0.6245, val acc 65.1 (64.7-65.8, 3 seeds). grid search Arch 2 GRU, range extended (best lr 3e-3 was at the edge): lr 0.01, GRU hidden 128, batch 64
+- `n4-a2-lr0.01-h64-b64`: val loss 0.6592, val acc 56.3 (50.8-67.2, 3 seeds). grid search Arch 2 GRU, range extended (best lr 3e-3 was at the edge): lr 0.01, GRU hidden 64, batch 64

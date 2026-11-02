@@ -185,6 +185,25 @@ def feature_scaling(inputs_cfg):
     return f.mean(0), np.maximum(f.std(0), 1e-6)
 
 
+def word_weights(vocab, steps):
+    """IDF weight per vocabulary id (row 0 = padding -> 0, row 1 = unknown -> mean weight). Document = one sentence of the TRAIN split,
+    so the weights never look at validation / test. idf = ln((1 + N) / (1 + df)) + 1 (smoothed, as in scikit-learn)."""
+    toks = T.tokenized("train", steps)
+    df, n = {}, 0
+    for r in toks:
+        for f in T.FIELDS:
+            n += 1
+            for t in set(r[f]):
+                df[t] = df.get(t, 0) + 1
+    idf = {t: float(np.log((1 + n) / (1 + c)) + 1) for t, c in df.items()}
+    mean = float(np.mean(list(idf.values())))
+    w = np.full(len(vocab) + 2, mean, dtype=np.float32)
+    w[0] = 0.0
+    for t, i in vocab.items():
+        w[i] = idf.get(t, max(idf.values()))
+    return w
+
+
 class Encoded:
     """Splits turned into word ids (one shared vocabulary), the frozen vector table and standardised own features."""
 
@@ -201,6 +220,7 @@ class Encoded:
             self.tok[s] = [toks[i] for i in idx]
         self.vocab, self.matrix, self.unknown = T.build_vocab((r[f] for s in splits for r in self.tok[s] for f in T.FIELDS), self.g, self.ecfg)
         self.ids = {s: {f: [T.encode(r[f], self.vocab, self.ecfg) for r in self.tok[s]] for f in T.FIELDS} for s in splits}
+        self.weights = word_weights(self.vocab, self.steps) if self.ecfg.get("weighting") == "idf" else None
         self.labels = {s: np.array([r["label"] for r in self.rows[s]], dtype=np.int64) for s in splits}
         nf = len(T.feature_list(inputs_cfg))
         self.n_features = nf
@@ -249,21 +269,32 @@ class Encoded:
 class ArtModel(nn.Module):
     """The design's graph plus the frozen word-vector table in front of it (the table is not saved with the weights)."""
 
-    def __init__(self, src, design, matrix=None):
+    def __init__(self, src, design, matrix=None, weights=None):
         super().__init__()
         inp = design.get("inputs", {})
         self.fmt = T.text_cfg(inp)["format"]
         self.net = G.GraphNet(design["graph"], src.input_metas(inp))
         dim = T.emb_cfg(inp)["dim"]
         self.register_buffer("emb", torch.as_tensor(matrix) if matrix is not None else torch.zeros(2, dim), persistent=False)
+        self.register_buffer("wt", torch.as_tensor(weights) if weights is not None else None, persistent=False)
 
     def inputs(self, batch):
         if "vectors" in batch:  # previews: already looked up
             return batch["vectors"]
-        out = {p: G.SetVal(self.emb[ids], ids != 0, None) for p, ids in batch["ids"].items()}
+        dev = self.emb.device
+        out = {p: G.SetVal(self._vectors(ids.to(dev)), ids.to(dev) != 0, None) for p, ids in batch["ids"].items()}
         if "features" in batch:
-            out["features"] = batch["features"]
+            out["features"] = batch["features"].to(dev)
         return out
+
+    def _vectors(self, ids):
+        x = self.emb[ids]
+        if self.wt is None:
+            return x
+        # TF-IDF weighting: scaled so that a plain mean over the real words gives the IDF-weighted mean (sum w*v / sum w)
+        w = self.wt[ids]
+        n = (ids != 0).sum(1, keepdim=True).float()
+        return x * (w * n / w.sum(1, keepdim=True).clamp(min=1e-6)).unsqueeze(-1)
 
     def logits(self, batch):
         """[B, 2]: the scores of h1 and h2 for every example."""
