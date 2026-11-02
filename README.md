@@ -33,7 +33,7 @@ Details, all ~190 runs and how to reproduce: [`project1/README.md`](project1/REA
 I did not write a training script per experiment. The models are built as graphs in my own experiment studio: pick the blocks,
 switch preprocessing steps on/off, set the training options; the studio checks the shapes, generates the code from the graph,
 trains, and logs every run (locally and to W&B). Each run's `config.json` is the full design.
-The Studio itself was written by my coding agent env in OpenClaw, with mostly Claude. Instead of changing the code, i can change the settings and composition of the model within that studio and it automatically creates the code output and settings for it. That also allows me to quickly make a few experiments.
+The Studio itself was written by my coding agent env in OpenClaw, with mostly Claude. Instead of changing the code, i can change the settings and composition of the model within that studio and it automatically creates the code output and training runs for it. That also allows me to quickly make a few experiments.
 
 Arch 1 final as a graph (O1, O2, h → mean over words → join, 900 numbers → MLP 512 → score):
 
