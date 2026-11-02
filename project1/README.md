@@ -45,6 +45,27 @@ on validation but 49.9 % on test. The models learned such cues; on the test spli
 worse than guessing, 0.693). Ensembles helped on validation (+2 points for the GRU) but not on test: all models share the same
 blind spot.
 
+### Analysis after the final test: did the validation gains carry over?
+
+After the final test I also tested the other key settings once (list fixed before running it, see `final/TEST_PLAN.md`; the
+final models were **not** re-selected). Mean over seeds, accuracy in %:
+
+| Setting | Val acc | Test acc | Test loss |
+|---|---|---|---|
+| Arch 1 baseline (`n1-a1-mean`) | 68.7 | 52.4 (51.6–53.1) | 1.00 |
+| Arch 1 no stopwords (`n1-a1-nostop`) | 70.8 | 52.5 (52.0–53.0) | 1.00 |
+| Arch 1 stemming (`n2-a1-nostop-stem`) | 65.8 | 53.2 (53.1–53.3) | 0.83 |
+| **Arch 1 final** | 71.5 | **53.1** | 0.98 |
+| Arch 2 GRU start (`n1-a2-gru`, 2 seeds) | 69.0 | 52.9 | 0.90 |
+| Arch 2 GRU + part ids (`n3t-a2-gru-nostop-partids`, 5 seeds) | 69.8 | 52.8 (52.4–53.1) | 0.93 |
+| **Arch 2 final** | 70.1 | **53.5** | 0.87 |
+| Arch 2 BiLSTM (`n1-a2-bilstm`, 1 seed) | 52.6 | 49.9 | 0.693 |
+
+The +2.8 points on validation from baseline to final became +0.7 on test; all trained models land between 52.4 and 53.5
+(one standard deviation of pure guessing on 1,532 examples is 1.3 points). So most of what improved validation was fitting cues
+that the filtered test split removes. Stemming, the worst setting on validation, is as good as the final on test and the least
+over-confident (lowest test loss): with less detail in the input it learned fewer of these cues.
+
 ## What was tried (mean validation results; full list in `experiments/*/README.md` and `results/settings.csv`)
 
 Preprocessing (Arch 1, 3 seeds each):

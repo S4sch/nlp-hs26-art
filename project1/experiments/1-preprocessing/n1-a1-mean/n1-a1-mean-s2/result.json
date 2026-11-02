@@ -26,7 +26,15 @@
    "n": 1000
   }
  },
- "test": null,
+ "test": {
+  "loss": 0.98506,
+  "acc": 0.53133,
+  "n": 1532,
+  "at": "2026-11-02T11:05:45",
+  "epoch": 21,
+  "forced": false,
+  "previous": null
+ },
  "epochs_run": 26,
  "stop_reason": "early stopping: no better validation loss for 5 epochs",
  "minutes": 2.44,
